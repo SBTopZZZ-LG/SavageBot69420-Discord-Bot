@@ -1,4 +1,6 @@
 const discordConnect = require("./discordConnect")
+const httpHost = require("./httpHost")
+
 const http = require("http")
 
 const insults = require("./Structs/insults.json")["insults"]
@@ -38,6 +40,12 @@ function getInsult() {
 
 discordConnect.main((client) => {
     console.log("Logged In")
+
+    httpHost.startServer((PORT) => {
+        console.log("HTTP Server running on port", PORT)
+    }, (res) => {
+        res.end("Logged In")
+    })
 
     client.on("message", (message) => {
         if (message.author.bot) return;

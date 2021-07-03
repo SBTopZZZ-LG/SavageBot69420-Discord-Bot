@@ -13,10 +13,6 @@ const main = (callback, error) => {
             error(err)
         })
 
-    // client.on('message', (message) => {
-    //     message.mentions.members.first().send()
-    // })
-
 }
 
 module.exports.main = main;
