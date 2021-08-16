@@ -1,21 +1,13 @@
 const discordConnect = require("./discordConnect")
-const httpHost = require("./httpHost")
+const expressHost = require("./expressHost")
 
 const http = require("http")
 
 const insults = require("./Structs/insults.json")["insults"]
 
-var fs = require('fs'),
-    request = require('request');
+var fs = require('fs')
 
-var download = function (uri, filename, callback) {
-    request.head(uri, function (err, res, body) {
-        console.log('content-type:', res.headers['content-type'])
-        console.log('content-length:', res.headers['content-length'])
-
-        request(uri).pipe(fs.createWriteStream(filename)).on('close', callback)
-    })
-}
+var roastSelfQueue = {}
 
 function makeid(length) {
     var result = '';
@@ -38,13 +30,18 @@ function getInsult() {
     return insults[Math.floor(Math.random() * insults.length)]
 }
 
+function getDenial() {
+    const denials = ["Hmmm.... Nah!", "I don't remember asking you.", "And so who TF asked you?", "Eat a pile of shut the f+xk up.",
+        "Why do I care?", "None of your business, pal!", "*sign* Sure.", "I don't remember roasting anyone. Do you?"]
+
+    return denials[Math.floor(Math.random() * denials.length)]
+}
+
 discordConnect.main((client) => {
     console.log("Logged In")
 
-    httpHost.startServer((PORT) => {
-        console.log("HTTP Server running on port", PORT)
-    }, (res) => {
-        res.end("Logged In")
+    expressHost.startServer((PORT) => {
+        console.log("Express Server running on port", PORT)
     })
 
     client.on("message", (message) => {
@@ -70,7 +67,31 @@ discordConnect.main((client) => {
             if (message.mentions.members.first()) {
                 message.channel.send("<@" + message.mentions.members.first() + ">, " + getInsult())
             } else {
-                message.reply("Whom should I roast? You?")
+                if (message.channel in roastSelfQueue) {
+                    delete roastSelfQueue[message.channel]
+                    message.reply(getInsult())
+                } else {
+                    roastSelfQueue[message.channel] = message.author
+                    message.reply("Whom should I roast? You?")
+                }
+            }
+        } else if (message.content.startsWith("/yes")) {
+            if (message.channel in roastSelfQueue) {
+                var roaster = roastSelfQueue[message.channel]
+                message.channel.send("<@" + roaster + ">, " + getInsult())
+
+                delete roastSelfQueue[message.channel]
+            } else {
+                message.channel.send("<@" + message.author + ">, " + getDenial())
+            }
+        } else if (message.content.startsWith("/no")) {
+            if (message.channel in roastSelfQueue) {
+                var roaster = roastSelfQueue[message.channel]
+                message.channel.send("<@" + roaster + ">, sure thing.")
+
+                delete roastSelfQueue[message.channel]
+            } else {
+                message.channel.send("<@" + message.author + ">, " + getDenial())
             }
         }
     })
