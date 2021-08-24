@@ -12,7 +12,7 @@ var fs = require('fs')
 var roastSelfQueue = {}, reminderQueue = {}
 
 // Regex
-const get_chart_regex = new RegExp(/^\/chart[ ]*\[([0-9,]+)][ ]*\[([a-zA-Z0-9\-_,]+)\]$/)
+const get_chart_regex = new RegExp(/^\/chart[ ]*\[([0-9,]+)][ ]*\[([a-zA-Z0-9\-_, ]+)\]$/)
 // const remind_regex_1 = new RegExp(/\/remind[ ]*((?:[0-1]{1})?[0-9|10|11|12]{1}[:]{1}(?:[0-5]{1})?[0-9]{1}[aApP]{1})[ ]*((?:(?:ne)|e){1})[ ]*\"(.+)\"/)
 const remind_regex_2 = new RegExp(/\/remind[ ]*(\d{1,3}[smh]{1})[ ]*((?:(?:ne)|e){1})[ ]*\"(.+)\"/)
 //
@@ -126,7 +126,7 @@ discordConnect.main((client) => {
             try {
                 const grps = message.content.toString().match(get_chart_regex);
                 const values = grps[1].toString().trim()
-                const labels = grps[2].split(',').join('|').toString()
+                const labels = grps[2].split(',').join('|').split(' ').join('%20').toString()
 
                 if (values.split(',').length != labels.split('|').length) {
                     message.reply("Please make sure that the number of values and the number of labels specified match.")
