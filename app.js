@@ -186,6 +186,22 @@ discordConnect.main((client) => {
             } catch (e) {
 
             }
+        } else if (message.content == "/meow") {
+            try {
+                request({
+                    url: "https://api.thecatapi.com/v1/images/search",
+                    encoding: null
+                }, (err, res, body) => {
+                    if (err)
+                        return message.reply("Sorry, but I can't get catto images at the moment!")
+
+                    const link = JSON.parse(body.toString())[0]["url"]
+
+                    message.reply("There ya go! :)", { files: [link] })
+                })
+            } catch (e) {
+
+            }
         }
     })
 }, (err) => {
