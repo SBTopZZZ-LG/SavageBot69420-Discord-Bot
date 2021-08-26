@@ -1,7 +1,9 @@
-const Discord = require("discord.js");
-const config = require("../config.json");
+require("dotenv").config()
 
-const client = new Discord.Client();
+const Discord = require("discord.js")
+const config = process.env
+
+const client = new Discord.Client()
 
 const main = (callback, error) => {
 
@@ -15,4 +17,4 @@ const main = (callback, error) => {
 
 }
 
-module.exports.main = main;
+module.exports.main = main
