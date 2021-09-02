@@ -54,7 +54,11 @@ class Remind extends Command {
             }
         }, duration_value)
 
-        this.message.reply("Reminder set!")
+        try {
+            this.message.delete()
+        } catch (e) { }
+
+        this.message.reply("Reminder set!").then(msg => setTimeout(() => msg.delete(), 5000))
     }
 }
 

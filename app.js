@@ -9,8 +9,11 @@ const Chart = require("./Commands/chart")
 const Remind = require("./Commands/remind")
 const Woof = require("./Commands/woof")
 const Meow = require("./Commands/meow")
+const Quote = require("./Commands/quote")
+const Poll = require("./Commands/Poll/poll")
+const Poll2_Layer = require("./Commands/Poll/poll2_layer")
 
-const ALL = [Give, Roast, Joke, Chart, Remind, Woof, Meow]
+const ALL = [Give, Roast, Joke, Chart, Remind, Woof, Meow, Quote]//, Poll, Poll2_Layer]
 //
 
 discordConnect.main((client) => {
@@ -23,10 +26,16 @@ discordConnect.main((client) => {
     client.on("message", (message) => {
         if (message.author.bot) return;
 
+        if (!message.content.toString().startsWith('/'))
+            return;
+
         for (var cmd of ALL) {
             var cmd_inst = new cmd(message)
-            if (cmd_inst.begin())
+
+            if (cmd_inst.begin()) {
+                console.log("Found!")
                 break
+            }
         }
     })
 }, (err) => {
