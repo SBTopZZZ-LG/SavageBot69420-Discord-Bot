@@ -2,7 +2,7 @@ const Command = require("../Libs/command")
 
 class Quote extends Command {
     constructor(message) {
-        const regex = /^\/quote$/
+        const regex = /^\/quote[ \n]*$/
 
         super(message, regex)
     }

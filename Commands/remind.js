@@ -2,7 +2,7 @@ const Command = require("../Libs/command")
 
 class Remind extends Command {
     constructor(message) {
-        const regex = /\/remind[ ]*(\d{1,3}[smh]{1})[ ]*((?:(?:ne)|e){1})[ ]*\"(.+)\"/
+        const regex = /\/remind[ \n]*(\d{1,3}[smh]{1})[ \n]*((?:(?:ne)|e){1})[ \n]*\"(.+)\"[ \n]*/
 
         super(message, regex)
     }
