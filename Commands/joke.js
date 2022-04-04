@@ -19,20 +19,23 @@ class Joke extends Command {
     }
 
     process(content, callback) {
+        const grps = content.match(this.regex);
+        const categories = grps[1] && grps[1].toString().split(" ").join()
+
         const axios = require("axios").default
 
         try {
-            axios.get("https://v2.jokeapi.dev/joke/Any?blacklistFlags=nsfw,religious,political,racist,sexist,explicit&type=twopart", {
+            axios.get(`https://v2.jokeapi.dev/joke/Any?type=twopart${categories ? `&blacklistFlags=${categories}` : ""}`, {
                 method: "GET",
                 headers: {
                     Accept: "application/json"
                 },
                 responseType: "json"
             }).then(response => {
-                const setup = response.data[0]["setup"]
-                const punchline = response.data[0]["punchline"]
+                const setup = response.data["setup"]
+                const delivery = response.data["delivery"]
 
-                callback([null, setup, punchline])
+                callback([null, setup, delivery])
             }).catch(e => callback([e, null, null]))
         } catch (e) {
             callback([e, null, null])
