@@ -22,24 +22,19 @@ class Give extends Command {
     }
 
     process(content, callback) {
-        const http = require('http')
+        const axios = require("axios").default
 
         try {
-            const req = http.request({ hostname: "meme-api.herokuapp.com", port: 80, path: "/gimme", method: "GET" }, res => {
-                res.on('data', d => {
-                    const url = JSON.parse(d.toString())["url"]
-
-                    callback([null, url])
-                })
-            })
-
-            req.on('error', err => {
-                console.error(err)
-
-                callback([err, null])
-            })
-
-            req.end()
+            axios.get("https://meme-api.herokuapp.com/gimme", {
+                method: "GET",
+                headers: {
+                    Accept: "application/json"
+                },
+                responseType: "json"
+            }).then(response => {
+                const url = response.data["url"]
+                callback([null, url])
+            }).catch(e => callback([e, null]))
         } catch (e) {
             callback([e, null])
         }
