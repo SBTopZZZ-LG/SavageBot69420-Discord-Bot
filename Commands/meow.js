@@ -2,7 +2,7 @@ const Command = require("../Libs/command")
 
 class Meow extends Command {
     constructor(message) {
-        const regex = /^\/meow[ \n]*$/
+        const regex = /^sb=meow[ \n]*$/
 
         super(message, regex)
     }
@@ -19,20 +19,19 @@ class Meow extends Command {
     }
 
     process(content, callback) {
-        const request = require('request')
+        const axios = require("axios").default
 
         try {
-            request({
-                url: "https://api.thecatapi.com/v1/images/search",
-                encoding: null
-            }, (err, res, body) => {
-                if (err)
-                    return callback([err, null])
-
-                const link = JSON.parse(body.toString())[0]["url"]
-
+            axios.get("https://api.thecatapi.com/v1/images/search", {
+                method: "GET",
+                headers: {
+                    Accept: "application/json"
+                },
+                responseType: "json"
+            }).then(response => {
+                const link = response.data[0]["url"]
                 callback([null, link])
-            })
+            }).catch(e => callback([e, null]))
         } catch (e) {
             callback([e, null])
         }

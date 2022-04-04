@@ -2,7 +2,7 @@ const Command = require("../Libs/command")
 
 class Chart extends Command {
     constructor(message) {
-        const regex = /^\/chart[ \n]*\[([0-9,]+)][ ]*\[([a-zA-Z0-9\-_, ]+)\][ \n]*$/
+        const regex = /^sb=chart[ \n]*\[([0-9,]+)][ ]*\[([a-zA-Z0-9\-_, ]+)\][ \n]*$/
 
         super(message, regex)
     }
@@ -19,7 +19,7 @@ class Chart extends Command {
     }
 
     process(content, callback) {
-        const request = require('request')
+        const axios = require("axios").default
 
         try {
             const grps = content.match(this.regex)
@@ -29,15 +29,12 @@ class Chart extends Command {
             if (values.split(',').length != labels.split('|').length)
                 return callback([1, null])
 
-            request({
-                url: "https://image-charts.com/chart?cht=p3&chs=400x400&chd=t:" + values + "&chl=" + labels,
-                encoding: null
-            }, (err, res, body) => {
-                if (err)
-                    return callback([err, null])
-
-                callback([null, body])
-            })
+            axios.get(`https://image-charts.com/chart?cht=p3&chs=600x600&chd=t:${values}&chl=${labels}`, {
+                method: "GET",
+                responseType: "arraybuffer"
+            }).then(response => {
+                callback([null, Buffer.from(response.data, 'binary')])
+            }).catch(e => callback([err, null]))
         } catch (e) {
             callback([e, null])
         }

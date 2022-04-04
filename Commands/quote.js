@@ -2,7 +2,7 @@ const Command = require("../Libs/command")
 
 class Quote extends Command {
     constructor(message) {
-        const regex = /^\/quote[ \n]*$/
+        const regex = /^sb=quote[ \n]*$/
 
         super(message, regex)
     }
@@ -19,21 +19,20 @@ class Quote extends Command {
     }
 
     process(content, callback) {
-        const request = require("request")
+        const axios = require("axios").default
 
         try {
-            request({
-                url: "https://api.quotable.io/random",
-                encoding: null
-            }, (err, res, body) => {
-                if (err)
-                    return callback([err, null, null])
-
-                const quote = JSON.parse(body.toString())["content"]
-                const author = JSON.parse(body.toString())["author"]
-
+            axios.get("https://api.quotable.io/random", {
+                method: "GET",
+                headers: {
+                    Accept: "application/json"
+                },
+                responseType: "json"
+            }).then(response => {
+                const quote = response.data["content"]
+                const author = response.data["author"]
                 callback([null, quote, author])
-            })
+            }).catch(e => callback([e, null, null]))
         } catch (e) {
             callback([e, null, null])
         }

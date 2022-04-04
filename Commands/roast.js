@@ -5,7 +5,7 @@ const Funcs = require("../Libs/funcs")
 
 class Roast extends Command {
     constructor(message) {
-        const regex = /^\/roast[ \n]*<@!(\d+)>[ \n]*$/
+        const regex = /^sb=roast[ \n]*<@!(\d+)>[ \n]*$/
 
         super(message, regex)
     }
