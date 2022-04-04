@@ -19,20 +19,19 @@ class Woof extends Command {
     }
 
     process(content, callback) {
-        const request = require('request')
+        const axios = require("axios").default
 
         try {
-            request({
-                url: "https://dog.ceo/api/breeds/image/random",
-                encoding: null
-            }, (err, res, body) => {
-                if (err)
-                    return callback([err, null])
-
-                const link = JSON.parse(body.toString())["message"]
-
+            axios.get("https://dog.ceo/api/breeds/image/random", {
+                method: "GET",
+                headers: {
+                    Accept: "application/json"
+                },
+                responseType: "json"
+            }).then(response => {
+                const link = response.data["message"]
                 callback([null, link])
-            })
+            }).catch(e => callback([e, null]))
         } catch (e) {
             callback([e, null])
         }
