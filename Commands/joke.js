@@ -19,25 +19,24 @@ class Joke extends Command {
     }
 
     process(content, callback) {
-        const http = require('http')
+        const grps = content.match(this.regex);
+        const categories = grps[1] && grps[1].toString().split(" ").join()
+
+        const axios = require("axios").default
 
         try {
-            const req = http.request({ hostname: "official-joke-api.appspot.com", port: 80, path: "/jokes/ten", method: "GET" }, res => {
-                res.on('data', d => {
-                    const parsed = JSON.parse(d.toString())[0]
-                    const setup = parsed["setup"].toString()
-                    const answer = parsed["punchline"].toString()
+            axios.get(`https://v2.jokeapi.dev/joke/Any?type=twopart${categories ? `&blacklistFlags=${categories}` : ""}`, {
+                method: "GET",
+                headers: {
+                    Accept: "application/json"
+                },
+                responseType: "json"
+            }).then(response => {
+                const setup = response.data["setup"]
+                const delivery = response.data["delivery"]
 
-                    callback([null, setup, answer])
-                })
-            })
-
-            req.on('error', err => {
-                callback([err, null, null])
-                message.reply("Sorry, cannot load any jokes right now!")
-            })
-
-            req.end()
+                callback([null, setup, delivery])
+            }).catch(e => callback([e, null, null]))
         } catch (e) {
             callback([e, null, null])
         }
