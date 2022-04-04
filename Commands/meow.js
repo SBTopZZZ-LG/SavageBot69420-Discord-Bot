@@ -2,7 +2,7 @@ const Command = require("../Libs/command")
 
 class Meow extends Command {
     constructor(message) {
-        const regex = /^\/meow[ \n]*$/
+        const regex = /^sb=meow[ \n]*$/
 
         super(message, regex)
     }

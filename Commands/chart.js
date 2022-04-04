@@ -2,7 +2,7 @@ const Command = require("../Libs/command")
 
 class Chart extends Command {
     constructor(message) {
-        const regex = /^\/chart[ \n]*\[([0-9,]+)][ ]*\[([a-zA-Z0-9\-_, ]+)\][ \n]*$/
+        const regex = /^sb=chart[ \n]*\[([0-9,]+)][ ]*\[([a-zA-Z0-9\-_, ]+)\][ \n]*$/
 
         super(message, regex)
     }

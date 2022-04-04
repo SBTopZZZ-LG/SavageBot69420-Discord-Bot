@@ -26,7 +26,7 @@ discordConnect.main((client) => {
     client.on("message", (message) => {
         if (message.author.bot) return;
 
-        if (!message.content.toString().startsWith('/'))
+        if (!message.content.toString().startsWith('sb='))
             return;
 
         for (var cmd of ALL) {

@@ -5,7 +5,7 @@ const Funcs = require("../Libs/funcs")
 
 class Give extends Command {
     constructor(message) {
-        const regex = /^\/give[ \n]*$/
+        const regex = /^sb=give[ \n]*$/
 
         super(message, regex)
     }
